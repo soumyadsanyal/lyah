@@ -23,3 +23,45 @@ listaddhelper x y flipped = case flipped of
 
 listadd x y = if x == [] then y else listaddhelper x y False
 
+listadd' x y = if x == [] then y else listadd' (init x) ((last x): y) 
+
+retrieve :: (Eq a) => [a] -> Int -> a
+retrieve list n = if ((n<0) || (list==[])) then error "Index out of range" else 
+ (case n of
+ 0 -> head list
+ _ -> retrieve (tail list) (n-1)
+ )
+
+lessthan:: (Ord a) => [a] -> [a] -> Bool
+lessthan first second = case first of 
+    [] -> True
+    _ -> (case second of
+        [] -> False
+        _ -> (let 
+            x = head first 
+            y = head second 
+            in case ((x<y), (x==y), (x>y)) of
+                (True, False, False) -> True
+                (False, True, False) -> lessthan (tail first) (tail second)
+                (False, False, True) -> False
+             )
+        )
+    
+len :: [a] -> Int
+len list = case list of
+    [] -> 0
+    _ -> 1+(len (tail list))
+
+empty :: [a] -> Bool
+empty list = case list of
+ [] -> True
+ _ -> False
+
+
+taker :: [a] -> Int -> [a]
+taker list quantity 
+ | quantity < 0 = error "can't take less than zero things"
+ | quantity ==0 = []
+ | quantity >0 = (head list): (taker (tail list) (quantity - 1))
+
+
