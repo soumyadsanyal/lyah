@@ -61,7 +61,33 @@ empty list = case list of
 taker :: [a] -> Int -> [a]
 taker list quantity 
  | quantity < 0 = error "can't take less than zero things"
- | quantity ==0 = []
+ | quantity ==0 || (empty list) = []
  | quantity >0 = (head list): (taker (tail list) (quantity - 1))
+
+dropper :: [a] -> Int -> [a] 
+dropper list quantity
+ | quantity <= 0 || (empty list) = list
+ | quantity > 0 = dropper (tail list) (quantity - 1)
+
+biggesthelper :: (Ord a) => [a] -> [a] -> a
+biggesthelper list container
+ | empty list = if (empty container) then error "empty list!" else head container
+ | (empty container) || (head container) < (head list) = biggesthelper (tail list) ((head list):[])
+ | otherwise = biggesthelper (tail list) container
+
+biggest :: (Ord a) => [a] -> a
+biggest list = biggesthelper list []
+
+smallesthelper :: (Ord a) => [a] -> [a] -> a
+smallesthelper list container
+ | empty list = if (empty container) then error "empty list!" else head container
+ | (empty container) || (head container) > (head list) = smallesthelper (tail list) ((head list):[])
+ | otherwise = smallesthelper (tail list) container
+
+smallest :: (Ord a) => [a] -> a
+smallest list = smallesthelper list []
+
+
+
 
 
