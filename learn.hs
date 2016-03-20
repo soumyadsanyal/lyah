@@ -87,6 +87,27 @@ smallesthelper list container
 smallest :: (Ord a) => [a] -> a
 smallest list = smallesthelper list []
 
+summing :: (Num a) => [a] -> a
+summing list
+ | empty list = 0
+ | otherwise = (head list) + summing (tail list)
+
+timesing :: (Num a) => [a] -> a
+timesing list
+ | empty list = 0
+ | otherwise = (head list) * timesing (tail list)
+
+isIn :: (Eq a) => [a] -> a -> Bool
+isIn list thing 
+ | empty list = False
+ | thing == head list = True
+ | otherwise = isIn (tail list) thing
+
+cycler :: (Eq a) => [a] -> [a]
+cycler list = let result = (listadd' list result) in result
+
+
+
 
 
 
