@@ -106,6 +106,17 @@ isIn list thing
 cycler :: (Eq a) => [a] -> [a]
 cycler list = let result = (listadd' list result) in result
 
+repeater :: (Eq a) => a -> [a]
+repeater thing = cycler (thing:[])
+
+replicater :: (Eq a) => a -> Int -> [a]
+replicater thing times = taker (repeater thing) times
+
+
+
+
+
+
 
 
 
