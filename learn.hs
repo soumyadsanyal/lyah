@@ -148,6 +148,47 @@ splithelper thestring holder result
 split :: String -> [String]
 split thestring = reverse (splithelper thestring [] [])
 
+biggest' :: (Ord a) => [a] -> a
+biggest' list = case list of 
+ [] -> error "Empty list!"
+ [x] ->  x
+ (x:xs) -> if x>maxtail then x else maxtail
+           where maxtail = biggest xs
+
+biggest'' :: (Ord a) => [a] -> a
+biggest'' list = case list of
+ [] -> error "empty list"
+ [x] -> x
+ (x:xs) -> max x (biggest'' xs)
+
+replicate' :: (Num a, Ord a) => a -> b -> [b]
+replicate' n x
+ | n <=0 = []
+ | True = x: (replicate' (n - 1) x)
+
+take' :: (Num a, Ord a) => a -> [b] -> [b]
+take' n xs 
+ | n<=0 || null xs = []
+ | True = y:(take' (n-1) ys)
+ where (y:ys) = xs
+
+repeat' :: a -> [a]
+repeat' x = x:(repeat' x)
+
+zip' :: [a] -> [b] -> [(a,b)]
+zip' xs ys
+ | (null xs) || (null ys) = []
+ | True = (u,v):(zip' us vs)
+ where {(u:us) = xs ;  (v:vs) = ys}
+
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' x ys
+ | null ys = False
+ | x == head ys = True
+ | True = elem' x (tail ys)
+
+
+
 
 
 
