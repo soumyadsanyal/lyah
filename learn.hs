@@ -139,14 +139,14 @@ initials list
 --  Deepta Sanyal "aymuoS":[] []
 -- Deepta Sanyal [] "Soumya":[]
 
-splithelper :: [Char] -> [Char] -> [[Char]] -> [[Char]]
+splithelper :: String -> String -> [String] -> [String]
 splithelper thestring holder result
- | thestring == "" = result
+ | thestring == "" = (reverse holder):result
  | head thestring == ' ' = splithelper (tail thestring) [] ((reverse holder):result)
  | True = splithelper (tail thestring) ((head thestring):holder) result 
 
-split :: String -> String
-split thestring = splithelper thestring [] []
+split :: String -> [String]
+split thestring = reverse (splithelper thestring [] [])
 
 
 
