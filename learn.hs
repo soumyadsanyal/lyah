@@ -124,6 +124,35 @@ removenumbers list = [num | num<- list, not (elem num ['0'..'9'])]
 
 righttriangles = [(a,b,c) | c<-[1..10], b<-[1..c], a<-[1..b], a^2 + b^2 == c^2, a+b+c==24]
 
+initials :: [String] -> String
+initials list
+ | list==[] = ""
+ | True = [x] ++ "." ++ (initials rest)
+   where first:rest = list
+         x:_ = first
+
+
+-- Soumya Deepta Sanyal [] []
+-- oumya Deepta Sanyal "S":[] []
+-- ...
+-- a Deepta Sanyal "ymuoS":[] []
+--  Deepta Sanyal "aymuoS":[] []
+-- Deepta Sanyal [] "Soumya":[]
+
+splithelper :: [Char] -> [Char] -> [[Char]] -> [[Char]]
+splithelper thestring holder result
+ | thestring == "" = result
+ | head thestring == ' ' = splithelper (tail thestring) [] ((reverse holder):result)
+ | True = splithelper (tail thestring) ((head thestring):holder) result 
+
+split :: String -> String
+split thestring = splithelper thestring [] []
+
+
+
+
+
+
 
 
 
