@@ -187,6 +187,13 @@ elem' x ys
  | x == head ys = True
  | True = elem' x (tail ys)
 
+quicksort :: (Ord a) => [a] -> [a]
+quicksort xs 
+ | null xs = []
+ | True = smallersorted ++ [y] ++ biggersorted
+ where (y:ys) = xs
+       smallersorted = quicksort [t | t<- ys, t<=y]
+       biggersorted = quicksort [t | t<- ys, t>y]
 
 
 
