@@ -52,6 +52,11 @@ len list = case list of
     [] -> 0
     _ -> 1+(len (tail list))
 
+len' :: [a] -> Int
+len' xs = sum [1 | _<- xs]
+
+
+
 empty :: [a] -> Bool
 empty list = case list of
  [] -> True
@@ -94,7 +99,7 @@ summing list
 
 timesing :: (Num a) => [a] -> a
 timesing list
- | empty list = 0
+ | empty list = 1
  | otherwise = (head list) * timesing (tail list)
 
 isIn :: (Eq a) => [a] -> a -> Bool
@@ -112,8 +117,12 @@ repeater thing = cycler (thing:[])
 replicater :: (Eq a) => a -> Int -> [a]
 replicater thing times = taker (repeater thing) times
 
+odd' candidate = if mod candidate 2 == 1 then True else False
 
+removenumbers :: [Char] -> [Char]
+removenumbers list = [num | num<- list, not (elem num ['0'..'9'])]
 
+righttriangles = [(a,b,c) | c<-[1..10], b<-[1..c], a<-[1..b], a^2 + b^2 == c^2, a+b+c==24]
 
 
 
