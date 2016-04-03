@@ -281,6 +281,12 @@ foldl' f c l
 elem'' :: (Eq a) => a -> [a] -> Bool
 elem'' x xs = foldl' (\c y -> if x==y then True else c) False xs
 
+myfoldr :: (a -> b -> b) -> b -> [a] -> b
+myfoldr f c l
+ | null l = c
+ | True = f (head l) (myfoldr f c (tail l))
+
+
 
 
 
