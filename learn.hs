@@ -233,16 +233,51 @@ quicksort' xs
        smallersorted = quicksort' (filter' (<=y) ys)
        biggersorted = quicksort' (filter' (>y) ys)
       
+biggestMultiple :: (Integral a) => a -> a -> a
+biggestMultiple l f = head (filter p [l, l-1..0])
+ where p x  = mod x f == 0
+
+takewhile :: (a-> Bool) -> [a] -> [a]
+takewhile p xs 
+ | null xs || (not (p y))= []
+ | p y = y: takewhile p ys
+ where (y:ys) = xs
+
+sumoddsquares :: Int -> Int
+sumoddsquares l = sum (takewhile (<l) (filter odd (map (^2) [1..])))
+
+collatz :: (Integral a) => a -> [a]
+collatz n
+ | n==1 = n:[]
+ | even n = n:(collatz (div n 2))
+ | odd n = n:(collatz (3*n + 1))
+
+numlongchains :: Int -> Int -> Int
+numlongchains m l = length (filter (>l) (map length (map collatz (take m [1..]))))
+
+eval :: [(a->b)] -> [a] -> [b]
+eval f l
+ | null l = []
+ | True = (head f) (head l) : (eval (tail f) (tail l))
+
+getindex :: [a] -> Int -> a
+getindex l n
+ | n<=0 = head l
+ | True = getindex (tail l) (n-1)
 
 
+addthree :: Int  -> Int -> Int -> Int
+addthree = \x -> \y -> \z -> x+y+z
 
+flip'' :: (a -> b -> c) -> (b-> a -> c)
+flip'' f = \x -> \y -> f y x
 
+foldl' :: (a -> b -> a) -> a -> [b] -> a
+foldl' f c l
+ | null l = c
+ | True = foldl' f (f c (head l)) (tail l)
 
-
-
-
-
-
+ 
 
 
 
