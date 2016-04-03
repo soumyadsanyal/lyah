@@ -277,7 +277,13 @@ foldl' f c l
  | null l = c
  | True = foldl' f (f c (head l)) (tail l)
 
- 
+-- implementing elem using foldl'
+elem'' :: (Eq a) => a -> [a] -> Bool
+elem'' x xs = foldl' (\c y -> if x==y then True else c) False xs
+
+
+
+
 
 
 
