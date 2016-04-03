@@ -2,6 +2,7 @@ double x = x + x
 
 righttriangle a b c = (square a) + (square b) - (square c) == 0
 
+square :: (Num a) => a -> a
 square x = x^2
 
 doublesmall x = if x>100 then x else x*2
@@ -194,6 +195,47 @@ quicksort xs
  where (y:ys) = xs
        smallersorted = quicksort [t | t<- ys, t<=y]
        biggersorted = quicksort [t | t<- ys, t>y]
+
+iterateapply :: (a -> a) -> Int  -> (a -> a)
+iterateapply f n 
+ | n<=0 = error "not applying anything at all!"
+ | n == 1 = f
+ | True = f . (iterateapply f (n-1))
+
+zipwith' :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipwith' f xs ys
+ | null xs || null ys = []
+ | True = f u v : zipwith' f us vs
+ where (u:us) = xs
+       (v:vs) = ys
+
+flip' :: (a -> b -> c) -> (b -> a -> c)
+flip' f x y = f y x
+
+map' :: (a -> b) -> [a] -> [b]
+map' f xs
+ | null xs = []
+ | True = f y : map' f ys
+ where (y:ys) = xs
+
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' p xs
+ | null xs = []
+ | p y = y : filter' p ys
+ | True = filter' p ys
+ where (y:ys) = xs
+
+quicksort' :: (Ord a) => [a] -> [a]
+quicksort' xs
+ | null xs = []
+ | True = smallersorted ++ [y] ++ biggersorted
+ where (y:ys) =  xs
+       smallersorted = quicksort' (filter' (<=y) ys)
+       biggersorted = quicksort' (filter' (>y) ys)
+      
+
+
+
 
 
 
