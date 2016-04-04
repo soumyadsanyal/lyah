@@ -277,6 +277,17 @@ foldl' f c l
  | null l = c
  | True = foldl' f (f c (head l)) (tail l)
 
+--foldl1'helper :: (a -> b -> a) -> a -> [a] -> [b] -> a
+
+foldl1' :: (a -> b -> a) -> a -> [b] -> [b] -> a
+foldl1' f c holder l
+ | holder == [] && not (null l) = foldl1' f c [head l] l
+ | null l = z 
+ | True = foldl1' f (f c (head l)) [head l] (tail l)
+ where (z:_) = holder
+
+
+
 -- implementing elem using foldl'
 elem'' :: (Eq a) => a -> [a] -> Bool
 elem'' x xs = foldl' (\c y -> if x==y then True else c) False xs
@@ -286,7 +297,8 @@ myfoldr f c l
  | null l = c
  | True = f (head l) (myfoldr f c (tail l))
 
-
+map'' :: (a -> b) -> [a] -> [b]
+map'' g xs = myfoldr (\y c -> (g y): c ) [] xs
 
 
 
