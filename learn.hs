@@ -279,12 +279,12 @@ foldl' f c l
 
 --foldl1'helper :: (a -> b -> a) -> a -> [a] -> [b] -> a
 
-foldl1' :: (a -> b -> a) -> a -> [b] -> [b] -> a
-foldl1' f c holder l
- | holder == [] && not (null l) = foldl1' f c [head l] l
- | null l = z 
- | True = foldl1' f (f c (head l)) [head l] (tail l)
- where (z:_) = holder
+-- foldl1' :: (a -> b -> a) -> a -> [b] -> [b] -> a
+-- foldl1' f c holder l
+--  | holder == [] && not (null l) = foldl1' f c [head l] l
+--  | null l = z 
+--  | True = foldl1' f (f c (head l)) [head l] (tail l)
+--  where (z:_) = holder
 
 
 
@@ -299,6 +299,34 @@ myfoldr f c l
 
 map'' :: (a -> b) -> [a] -> [b]
 map'' g xs = myfoldr (\y c -> (g y): c ) [] xs
+
+-- can I implement foldl1 and foldr1 without using Maybe types? 
+--
+
+maximum'' :: (Ord a) => [a] -> a
+maximum'' = foldr1 (\x c -> if x>c then x else x)
+
+reverse'' :: [a] -> [a]
+reverse'' = foldl' (\c x -> x:c) []
+
+product'' :: (Num a) => [a] -> a
+product'' = foldr1 (\x c -> x*c)
+
+
+head'' :: [a] -> a
+head'' = foldr1 (\x _ -> x)
+
+last'' :: [a] -> a
+last'' = foldl1 (\_ x -> x)
+
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' p = myfoldr (\x c -> if p x then x: c else c) []
+
+evallist :: a -> [(a-> b)] -> [b]
+evallist arg l = map ($ arg) l
+
+
+
 
 
 
