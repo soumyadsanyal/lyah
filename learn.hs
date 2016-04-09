@@ -1,12 +1,9 @@
-import Data.List
-
-
 double x = x + x
 
-righttriangle a b c = (square a) + (square b) - (square c) == 0
+-- righttriangle a b c = (square a) + (square b) - (square c) == 0
 
-square :: (Num a) => a -> a
-square x = x^2
+-- square :: (Num a) => a -> a
+-- square x = x^2
 
 doublesmall x = if x>100 then x else x*2
 
@@ -419,6 +416,29 @@ mygrouphelper s l
 
 mygroup :: (Eq a) => [a] -> [[a]]
 mygroup l = mygrouphelper [] l
+
+mysearch :: (Eq a) => [a] -> [a] -> Bool
+mysearch needle haystack = myfoldl (\c x -> if (take (length needle) x == needle) then True else c) False $ mytails haystack
+
+myisprefixof :: (Eq a) => [a] -> [a] -> Bool
+myisprefixof s t = if take (length s) t == s then True else False
+
+myissuffixof :: (Eq a) => [a] -> [a] -> Bool
+myissuffixof s t = myisprefixof (reverse s) (reverse t)
+
+myelem :: (Eq a) => a -> [a] -> Bool
+myelem e l 
+ | null l = False
+ | True = if e == head l then True else myelem e $ tail l
+
+mypartitionhelper :: (a -> Bool) -> [a] -> [a] -> [a] -> ([a],[a])
+mypartitionhelper p l g b
+ | null l = (g,b)
+ | True = if (p $ head l) then mypartitionhelper p (tail l) ((head l):g) b else mypartitionhelper p (tail l) g ((head l):b)
+
+mypartition :: (a -> Bool) -> [a] -> ([a],[a])
+mypartition p l = mypartitionhelper p (reverse l) [] []
+
 
 
 
