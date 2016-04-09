@@ -1,3 +1,6 @@
+import Data.List
+
+
 double x = x + x
 
 righttriangle a b c = (square a) + (square b) - (square c) == 0
@@ -202,6 +205,9 @@ iterateapply f n
  | n == 1 = f
  | True = f . (iterateapply f (n-1))
 
+iterateforever :: (a -> a) -> a -> [a]
+iterateforever f x = map ($ x) $ map (iterateapply f) [1..]
+
 zipwith' :: (a -> b -> c) -> [a] -> [b] -> [c]
 zipwith' f xs ys
  | null xs || null ys = []
@@ -277,12 +283,6 @@ myfoldl f c l
  | null l = c
  | True = myfoldl f (f c (head l)) (tail l)
 
-myfoldl :: (a -> b -> a) -> a -> [b] -> a
-myfoldl f c l
- | null l = c
- | True = myfoldl (f c (head l)) (tail l)
-
-
 -- implementing elem using myfoldl
 elem'' :: (Eq a) => a -> [a] -> Bool
 elem'' x xs = myfoldl (\c y -> if x==y then True else c) False xs
@@ -320,6 +320,102 @@ evallist arg l = map ($ arg) l
 oddsquaresum :: Integer
 --oddsquaresum = sum (takeWhile (<10000) (map filter odd ((^2) [1..])))
 oddsquaresum = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
+
+myintersperse :: a -> [a] -> [a]
+myintersperse x l = case l of
+ (a:[]) -> a:[]
+ (a:xs) -> a:x:(myintersperse x xs)
+
+myintercalate :: [t] -> [[t]] -> [t]
+myintercalate l ls = case ls of 
+ (a:[]) -> a++[]
+ (a:xs) -> a++l++(myintercalate l xs)
+
+myany :: (a -> Bool) -> [a] -> Bool
+myany p l
+ | null l = False
+ | True = if p $ head l then True else myany p $tail l
+
+myall :: (a -> Bool) -> [a] -> Bool
+myall p l
+ | null l = True
+ | True = p (head l) && (myall p $ tail l)
+
+mytranspose :: [[a]] -> [[a]]
+mytranspose l 
+ | myany id $ map null l = []
+ | True = (map head l) : (mytranspose $ map tail l)
+
+myconcat :: [[a]] -> [a]
+myconcat l
+ | null l = []
+ | True = head l ++ (myconcat $ tail l)
+
+myconcatmap :: (a -> b) -> [[a]] -> [b]
+myconcatmap f l
+ | null l = []
+ | True = (map f (head l)) ++ (myconcatmap f $ tail l)
+
+chomp :: Int -> [a] -> [a]
+chomp n l
+ | null l || n<=0 = []
+ | True = (head l) : chomp (n-1) (tail l)
+
+mytailshelper :: [a] -> [[a]]
+mytailshelper l
+ | null l = []
+ | True = (tail l) : (mytailshelper (tail l))
+
+mytails :: [a] -> [[a]]
+mytails l = mytailshelper $ (head l):l
+
+mylast :: [a] -> a
+mylast l = case l of
+ [] -> error "empty list"
+ (x:[]) -> x
+ _ -> mylast $ tail l
+
+myinit :: [a] -> [a]
+myinit l = case l of
+ [] -> []
+ (x:[]) -> []
+ _ -> (head l) : (myinit $ tail l)
+
+myinitshelper :: [a] -> [[a]]
+myinitshelper l
+ | null l  = []
+ | True = (myinit l):(myinitshelper $myinit l)
+
+myinits :: [a] -> [[a]]
+myinits l = reverse $ myinitshelper $ l ++ (mylast l):[]
+
+mysplitat :: Int -> [a] -> ([a], [a])
+mysplitat n l = (take n l, drop n l)
+
+mytakewhile :: (a -> Bool) -> [a] -> [a]
+mytakewhile p l
+ | null l = l
+ | p $ head l = (head l): (mytakewhile p $ tail l)
+ | True = []
+
+mydropwhile :: (a -> Bool) -> [a] -> [a]
+mydropwhile p l
+ | null l = []
+ | p $ head l = mydropwhile p $ tail l
+ | True = l
+
+myspan :: (a -> Bool) -> [a] -> ([a],[a])
+myspan p l = (mytakewhile p l, mydropwhile p l)
+
+mybreak :: (a -> Bool) -> [a] -> ([a],[a])
+mybreak p l = myspan (not p) l
+
+
+
+
+
+
+
 
 
 
