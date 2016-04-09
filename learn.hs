@@ -408,9 +408,17 @@ myspan :: (a -> Bool) -> [a] -> ([a],[a])
 myspan p l = (mytakewhile p l, mydropwhile p l)
 
 mybreak :: (a -> Bool) -> [a] -> ([a],[a])
-mybreak p l = myspan (not p) l
+mybreak p l = myspan (not . p) l
 
+mygrouphelper :: (Eq a) => [[a]] -> [a] -> [[a]]
+mygrouphelper s l
+ | null l = reverse s
+ | null s = mygrouphelper (((head l):[]):s) (tail l)
+ | (head $ head s) == head l = mygrouphelper (((head l):(head s)):(tail s)) $ tail l
+ | True = mygrouphelper (((head l):[]):s) $ tail l
 
+mygroup :: (Eq a) => [a] -> [[a]]
+mygroup l = mygrouphelper [] l
 
 
 
