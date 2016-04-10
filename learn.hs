@@ -481,6 +481,17 @@ myfindindiceshelper p l i
 myfindindices :: (a -> Bool) -> [a] -> [Int]
 myfindindices p l = myfindindiceshelper p l 1
 
+myzip :: [a] -> [b] -> [(a,b)]
+myzip l m
+ | null l || null m = []
+ | True = (head l, head m):(myzip (tail l) (tail m))
+
+myzipwith :: (a -> b -> c) -> [a] -> [b] -> [c]
+myzipwith f l m
+ | null l || null m = []
+ | True = (f (head l) (head m)):(myzipwith f (tail l) (tail m))
+
+
 
 
 
