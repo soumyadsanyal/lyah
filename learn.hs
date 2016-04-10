@@ -463,6 +463,24 @@ myelemindiceshelper e l i
 myelemindices :: (Eq a) => a -> [a] -> [Int]
 myelemindices e l = myelemindiceshelper e l 1
 
+myfindindexhelper :: (a -> Bool) -> [a] -> Int -> Maybe Int
+myfindindexhelper p l i
+ | null l = Nothing
+ | p $ head l = Just i
+ | True = myfindindexhelper p (tail l) (i+1)
+
+myfindindex :: (a -> Bool) -> [a] -> Maybe Int
+myfindindex p l  = myfindindexhelper p l 1
+
+myfindindiceshelper :: (a -> Bool) -> [a] -> Int -> [Int]
+myfindindiceshelper p l i
+ | null l = []
+ | p $ head l = i:(myfindindiceshelper p (tail l) (i+1))
+ | True = myfindindiceshelper p (tail l) (i+1)
+
+myfindindices :: (a -> Bool) -> [a] -> [Int]
+myfindindices p l = myfindindiceshelper p l 1
+
 
 
 
