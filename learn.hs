@@ -439,8 +439,20 @@ mypartitionhelper p l g b
 mypartition :: (a -> Bool) -> [a] -> ([a],[a])
 mypartition p l = mypartitionhelper p (reverse l) [] []
 
+myfind :: (a -> Bool) -> [a] -> Maybe a
+myfind p l
+ | null l = Nothing
+ | p $ head l = Just (head l)
+ | True = myfind p $ tail l
 
+myelemindexhelper :: (Eq a) => a -> [a] -> Int -> Maybe Int
+myelemindexhelper e l i
+ | null l = Nothing
+ | e == head l = Just i
+ | True = myelemindexhelper e (tail l) (i+1)
 
+myelemindex :: (Eq a) => a -> [a] -> Maybe Int
+myelemindex e l  = myelemindexhelper e l 1
 
 
 
