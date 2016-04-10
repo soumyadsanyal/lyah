@@ -454,7 +454,14 @@ myelemindexhelper e l i
 myelemindex :: (Eq a) => a -> [a] -> Maybe Int
 myelemindex e l  = myelemindexhelper e l 1
 
+myelemindiceshelper :: (Eq a) => a -> [a] -> Int -> [Int]
+myelemindiceshelper e l i
+ | null l = []
+ | e == head l = i:(myelemindiceshelper e (tail l) (i+1))
+ | True = myelemindiceshelper e (tail l) (i+1)
 
+myelemindices :: (Eq a) => a -> [a] -> [Int]
+myelemindices e l = myelemindiceshelper e l 1
 
 
 
