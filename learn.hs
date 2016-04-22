@@ -491,7 +491,41 @@ myzipwith f l m
  | null l || null m = []
  | True = (f (head l) (head m)):(myzipwith f (tail l) (tail m))
 
+mylineshelper :: [Char] -> [Char] -> [[Char]] -> [[Char]]
+mylineshelper l a b
+ | null l = reverse ((reverse a):b)
+ | (head l) == '\n' = mylineshelper (tail l) [] ((reverse a):b)
+ | True = mylineshelper (tail l) ((head l):a) b
 
+mylines :: [Char] -> [[Char]]
+mylines l = mylineshelper l [] []
+
+myunlines :: [[Char]] -> [Char]
+myunlines l
+ | null l = ""
+ | True = (head l) ++ "\n" ++ (myunlines (tail l))
+
+bite :: [Char] -> [Char]
+bite l
+ | null l = []
+ | (head l) == ' ' || null l = []
+ | True = (head l) : (bite $ tail l)
+
+spit :: [Char] -> [Char]
+spit l
+ | null l = []
+ | (head l) == ' ' = tail l
+ | True = (spit $ tail l)
+
+mywords :: [Char] -> [[Char]]
+mywords l
+ | null l = []
+ | True = (bite l) : (mywords (spit l))
+
+myunwords :: [[Char]] -> [Char]
+myunwords l
+ | null l = []
+ | True = (head l) ++ (if null (tail l) then "" else " ") ++ (myunwords $ tail l)
 
 
 
