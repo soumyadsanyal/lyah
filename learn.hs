@@ -527,6 +527,14 @@ myunwords l
  | null l = []
  | True = (head l) ++ (if null (tail l) then "" else " ") ++ (myunwords $ tail l)
 
+mynubhelper :: (Eq a) => [a] -> [a] -> [a] -> [a]
+mynubhelper l s r
+ | null l = reverse r
+ | elem (head l) s = mynubhelper (tail l) s r
+ | True = mynubhelper (tail l) ((head l):s) ((head l):r)
+
+mynub :: (Eq a) => [a] -> [a]
+mynub l = mynubhelper l [] []
 
 
 
