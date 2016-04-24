@@ -527,20 +527,26 @@ myunwords l
  | null l = []
  | True = (head l) ++ (if null (tail l) then "" else " ") ++ (myunwords $ tail l)
 
-mynubhelper :: (Eq a) => [a] -> [a] -> [a] -> [a]
-mynubhelper l s r
+mynubbyhelper :: (a -> a -> Bool) -> [a] -> [a] -> [a] -> [a]
+mynubbyhelper p l s r
  | null l = reverse r
- | elem (head l) s = mynubhelper (tail l) s r
- | True = mynubhelper (tail l) ((head l):s) ((head l):r)
+ | myany (==True) (map (p (head l)) s) = mynubbyhelper p (tail l) s r
+ | True = mynubbyhelper p (tail l) ((head l):s) ((head l):r)
+
+mynubby :: (a -> a -> Bool) -> [a] -> [a]
+mynubby p l = mynubbyhelper p l [] []
 
 mynub :: (Eq a) => [a] -> [a]
-mynub l = mynubhelper l [] []
+mynub l = mynubby (==) l
+
+mydeleteby :: (a -> a -> Bool) -> a -> [a] -> [a]
+mydeleteby p x l
+ | null l = []
+ | p (head l) x = (tail l)
+ | True = (head l) : (mydeleteby p x $ tail l)
 
 mydelete :: (Eq a) => a -> [a] -> [a]
-mydelete x l
- | null l = []
- | (head l) == x = (tail l)
- | True = (head l) : (mydelete x $ tail l)
+mydelete x l = mydeleteby (==) x l
 
 mysetdiff :: (Eq a) => [a] -> [a] -> [a]
 mysetdiff a b
