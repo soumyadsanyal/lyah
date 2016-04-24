@@ -560,15 +560,21 @@ myintersect a b
  | elem (head a) b = (head a) : (myintersect (tail a) b)
  | True = myintersect (tail a) b
 
-myinserthelper :: (Ord a) => [a] -> [a] -> [a]
-myinserthelper a b
+myinserthelper' :: (Ord a) => [a] -> [a] -> [a]
+myinserthelper' a b
  | null a = b
  | null b = a
  | (head a) < (head b) = (head a) : b
- | True = (head b) : (myinserthelper a (tail b))
+ | True = (head b) : (myinserthelper' a (tail b))
 
-myinsert :: (Ord a) => a -> [a] -> [a]
-myinsert x l = myinserthelper (x:[]) l
+myinsert' :: (Ord a) => a -> [a] -> [a]
+myinsert' x l = myinserthelper' (x:[]) l
+
+myinsert :: (Ord a) => a-> [a] -> [a]
+myinsert x l
+ | null l = x:[]
+ | x < (head l) = x:l
+ | True = (head l) : (myinsert x $ tail l)
 
 
 
