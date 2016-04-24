@@ -554,17 +554,23 @@ mysetdiff a b
  | elem (head b) a = mysetdiff (tail b) $ mydelete (head b) a
  | True = mysetdiff (tail b) a
 
-myunion :: (Eq a) => [a] -> [a] -> [a]
-myunion a b
+myunionby :: (a -> a -> Bool) -> [a] -> [a] -> [a]
+myunionby p a b
  | null a = b
- | elem (head a) b = myunion (tail a) b
- | True = (head a): (myunion (tail a) b)
+ | myany (==True) (map (p (head a)) b) = myunionby p (tail a) b
+ | True = (head a): (myunionby p (tail a) b)
 
-myintersect :: (Eq a) =>  [a] -> [a] -> [a]
-myintersect a b
+myunion :: (Eq a) => [a] -> [a] -> [a]
+myunion a b = myunionby (==) a b
+
+myintersectby :: (a -> a -> Bool) -> [a] -> [a] -> [a]
+myintersectby p a b
  | null a = []
- | elem (head a) b = (head a) : (myintersect (tail a) b)
- | True = myintersect (tail a) b
+ | myany (==True) (map (p (head a)) b) = (head a) : (myintersectby p (tail a) b)
+ | True = myintersectby p (tail a) b
+
+myintersect :: (Eq a) => [a] -> [a] -> [a]
+myintersect = myintersectby (==)
 
 myinserthelper' :: (Ord a) => [a] -> [a] -> [a]
 myinserthelper' a b
