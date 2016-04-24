@@ -536,11 +536,39 @@ mynubhelper l s r
 mynub :: (Eq a) => [a] -> [a]
 mynub l = mynubhelper l [] []
 
+mydelete :: (Eq a) => a -> [a] -> [a]
+mydelete x l
+ | null l = []
+ | (head l) == x = (tail l)
+ | True = (head l) : (mydelete x $ tail l)
 
+mysetdiff :: (Eq a) => [a] -> [a] -> [a]
+mysetdiff a b
+ | null b = a
+ | elem (head b) a = mysetdiff (tail b) $ mydelete (head b) a
+ | True = mysetdiff (tail b) a
 
+myunion :: (Eq a) => [a] -> [a] -> [a]
+myunion a b
+ | null a = b
+ | elem (head a) b = myunion (tail a) b
+ | True = (head a): (myunion (tail a) b)
 
+myintersect :: (Eq a) =>  [a] -> [a] -> [a]
+myintersect a b
+ | null a = []
+ | elem (head a) b = (head a) : (myintersect (tail a) b)
+ | True = myintersect (tail a) b
 
+myinserthelper :: (Ord a) => [a] -> [a] -> [a]
+myinserthelper a b
+ | null a = b
+ | null b = a
+ | (head a) < (head b) = (head a) : b
+ | True = (head b) : (myinserthelper a (tail b))
 
+myinsert :: (Ord a) => a -> [a] -> [a]
+myinsert x l = myinserthelper (x:[]) l
 
 
 
