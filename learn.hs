@@ -407,15 +407,15 @@ myspan p l = (mytakewhile p l, mydropwhile p l)
 mybreak :: (a -> Bool) -> [a] -> ([a],[a])
 mybreak p l = myspan (not . p) l
 
-mygrouphelper :: (Eq a) => [[a]] -> [a] -> [[a]]
-mygrouphelper s l
- | null l = reverse s
- | null s = mygrouphelper (((head l):[]):s) (tail l)
- | (head $ head s) == head l = mygrouphelper (((head l):(head s)):(tail s)) $ tail l
- | True = mygrouphelper (((head l):[]):s) $ tail l
+-- mygrouphelper :: (Eq a) => [[a]] -> [a] -> [[a]]
+-- mygrouphelper s l
+--  | null l = reverse s
+--  | null s = mygrouphelper (((head l):[]):s) (tail l)
+--  | (head $ head s) == head l = mygrouphelper (((head l):(head s)):(tail s)) $ tail l
+--  | True = mygrouphelper (((head l):[]):s) $ tail l
 
-mygroup :: (Eq a) => [a] -> [[a]]
-mygroup l = mygrouphelper [] l
+-- mygroup :: (Eq a) => [a] -> [[a]]
+-- mygroup l = mygrouphelper [] l
 
 mysearch :: (Eq a) => [a] -> [a] -> Bool
 mysearch needle haystack = myfoldl (\c x -> if (take (length needle) x == needle) then True else c) False $ mytails haystack
@@ -576,6 +576,18 @@ myinsert x l
  | x < (head l) = x:l
  | True = (head l) : (myinsert x $ tail l)
 
+mygroupbyhelper :: (Eq a) => (a -> a-> Bool) -> [a] -> [a] -> [[a]] -> [[a]]
+mygroupbyhelper p l s r
+ | null l = reverse $ (reverse s):r
+ | null s = mygroupbyhelper p (tail l) ((head l):s) r
+ | p (head l) (head s) = mygroupbyhelper p (tail l) ((head l) : s) r
+ | True = mygroupbyhelper p (tail l) ((head l):[]) ((reverse s):r)
+
+mygroupby :: (Eq  a) => (a -> a-> Bool) -> [a] -> [[a]]
+mygroupby p l = mygroupbyhelper p l [] []
+
+mygroup :: (Eq  a) => [a] -> [[a]]
+mygroup l = mygroupbyhelper (==) l [] []
 
 
 
