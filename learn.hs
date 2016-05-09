@@ -1,3 +1,5 @@
+import qualified Data.Map as Map
+
 double x = x + x
 
 -- righttriangle a b c = (square a) + (square b) - (square c) == 0
@@ -601,5 +603,19 @@ mygroupby p l = mygroupbyhelper p l [] []
 mygroup :: (Eq  a) => [a] -> [[a]]
 mygroup l = mygroupbyhelper (==) l [] []
 
+-- placeholder for sortby, insertby, ...
+
+myfindkey :: (Eq k) => k -> [(k,v)] -> Maybe v
+myfindkey key hash
+ | null hash = Nothing
+ | key == test = Just value
+ | True = myfindkey key (tail hash)
+ where
+  (test, value) = head hash
+
+myfindkey' :: (Eq k) => k -> [(k,v)] -> Maybe v
+myfindkey' k  = myfoldr (\(test, value) c -> (if k==(test) then (Just value) else c) ) Nothing 
+
+l = [("1", "Soumya"), ("2", "Sarah"), ("3", "Bronzie"), ("4", "Scarlet"), ("5", "Sam")]
 
 
