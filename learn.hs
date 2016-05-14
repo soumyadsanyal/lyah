@@ -618,4 +618,27 @@ myfindkey' k  = myfoldr (\(test, value) c -> (if k==(test) then (Just value) els
 
 l = [("1", "Soumya"), ("2", "Sarah"), ("3", "Bronzie"), ("4", "Scarlet"), ("5", "Sam")]
 
+data Shape = Circle Point Float | Rectangle Point Point deriving (Show)
+
+data Point = Point Float Float deriving (Show)
+
+-- A type is a collection of values. A value constructor is a function mapping parameters to values.
+--
+--
+--
+
+surface :: Shape -> Float
+surface (Circle _ r) = pi * r^2
+surface (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x1-x2) * (abs $ y2-y1)
+
+nudge :: Shape -> Point -> Shape
+nudge (Circle (Point x1 y1) r) (Point dx dy) = Circle (Point (x1+dx) (y1+dy)) r
+nudge (Rectangle (Point x1 y1) (Point x2 y2)) (Point dx dy) = Rectangle (Point (x1+dx) (y1+dy)) (Point (x2+dx) (y2+dy))
+
+baseCircle :: Float -> Shape
+baseCircle r = Circle (Point 0 0) r
+
+baseRect :: Float -> Float -> Shape
+baseRect x y = Rectangle (Point 0 0) (Point x y) 
+
 
