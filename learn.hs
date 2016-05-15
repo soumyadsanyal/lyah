@@ -641,4 +641,99 @@ baseCircle r = Circle (Point 0 0) r
 baseRect :: Float -> Float -> Shape
 baseRect x y = Rectangle (Point 0 0) (Point x y) 
 
+data Person = Person {
+ firstname :: String,
+ lastname :: String,
+ age :: Int,
+ height :: Float,
+ phonenumber :: String,
+ flavor :: String
+ } deriving (Show)
+
+data Safe a = None | Safe a
+	deriving (Show)
+
+data Vector a = Vector a a a deriving (Show)
+
+--A deriving B gives A the interface (functions) included in the typeclass B
+--
+--
+
+data ThisOrThat a b = This a | That b deriving (Eq, Ord, Read, Show)
+
+data LockerState = Taken | Free deriving (Show, Eq)
+
+type Code = String
+
+type LockerMap = Map.Map Int (LockerState, Code)
+
+lockerlookup :: Int  -> LockerMap -> ThisOrThat String Code
+lockerlookup lockernumber map =
+	case Map.lookup lockernumber map of 
+		Nothing -> This $ "Locker number " ++ show lockernumber ++ " doesn't exist."
+		Just (state, code) -> if state /= Taken
+			then That code
+			else This $ "Locker " ++ show lockernumber ++ " is already taken."
+
+
+lockers :: LockerMap
+lockers = Map.fromList [(100,(Taken, "123")), (101, (Free, "345"))]
+
+data Stack a = Empty | Cons a (Stack a)
+	deriving (Show, Eq, Read, Ord)
+
+data GotNot a b = Got a | Not b
+	deriving (Eq, Show)
+
+pop :: (Eq a) => Stack a -> GotNot a String
+pop s
+	| s == Empty = Not "Empty stack!"
+	| True = Got t
+		where (Cons t s') = s
+
+popped :: (Eq a) => Stack a -> Stack a
+popped s
+	| s == Empty = s
+	| True = s'
+		where (Cons _ s') = s
+
+data Tree a = EmptyTree | Node a (Tree a) (Tree a)
+	deriving (Show, Eq, Read)
+
+singleton :: a -> Tree a
+singleton x = Node x EmptyTree EmptyTree
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = singleton x
+treeInsert x (Node a left right)
+	| x == a = Node x left right
+	| x < a = Node a (treeInsert x left) right
+	| x > a = Node a left (treeInsert x right)
+
+treeElem :: (Eq a) => a -> Tree a -> Bool
+treeElem x EmptyTree = False
+treeElem x (Node y left right)
+	| x == y = True
+	| True = (treeElem x left) || (treeElem x right)
+
+data TrafficLight = Red | Yellow | Green
+
+instance Eq TrafficLight where
+	Red == Red = True
+	Green == Green = True
+	Yellow == Yellow = True
+	_ == _ = False
+
+instance Show TrafficLight where
+	show Red = "Red light"
+	show Yellow = "Yellow light"
+	show Green = "Green light"
+
+class Functor f where
+	fmap :: (a->b) -> f a -> f b
+
+
+
+
+
 
