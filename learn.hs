@@ -865,6 +865,13 @@ data Barry t k p = Barry { yabba :: p, dabba :: t k}
 -- then kind k is *
 -- kind t k p is (* -> *) -> * -> * -> *
 
+instance Functor (Barry a b) where
+	fmap g x = Barry {yabba = g (yabba x), dabba = dabba x}
+
+
+
+
+
 
 
 
