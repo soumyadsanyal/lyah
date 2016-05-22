@@ -828,8 +828,13 @@ instance Functor BST where
 	fmap g EmptyBST = EmptyBST
 	fmap g t = Node (g (key t)) (fmap g (left t)) (fmap g (right t))
 
+instance Functor (PassFail a) where
+	fmap g (Pass x) = Pass (x)
+	fmap g (Fail y) = Fail (g y)
 
-
+--instance (Map.Map k) where
+--	fmap g (Map.Map k) v = Map.Map k (g v)
+-- todo: implement this correctly.
 
 
 	
