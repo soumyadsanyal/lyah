@@ -676,47 +676,89 @@ data EReal a = MinusInfinity | EReal a | PlusInfinity deriving (Show, Read, Eq, 
 data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday 
 	deriving (Show, Read, Eq, Ord, Bounded, Enum)
 
+type FirstName = String
+type LastName = String
+type UniqueKey = Int
+type PhoneNumber = String
+type Name = String
+
+type PhoneBook = [(Name, PhoneNumber)]
+
+type AssocList key value = [(key, value)]
+type IntMap = Map.Map Int
+
+inPhoneBook :: Name -> PhoneNumber -> PhoneBook -> Bool
+inPhoneBook name pnumber pbook = elem (name, pnumber) pbook
+
+data PassFail a b = Pass a | Fail b
+	deriving (Eq, Show, Read, Ord)
+
+data LockerState = Taken | Free deriving (Show, Eq)
+
+type Code = String
+
+type LockerMap = Map.Map Int (LockerState, Code)
+
+lockerlookup :: Int -> LockerMap -> PassFail Code String
+lockerlookup lockernumber lockermap = case Map.lookup lockernumber lockermap of
+	Nothing -> Fail $ "Locker number " ++ show lockernumber ++ " doesn't exist."
+	Just (state, code) -> if state == Free
+		then Pass code
+		else Fail $ "Locker number " ++ show lockernumber ++ " is taken. Please request a different locker."
 
 
 
 
 
-data Stack a = Empty | Cons a (Stack a)
+
+
+data Stack a = Empty | Cons {stackhead :: a, stacktail :: Stack a}
 	deriving (Show, Eq, Read, Ord)
 
-data GotNot a b = Got a | Not b
-	deriving (Eq, Show)
-
-pop :: (Eq a) => Stack a -> GotNot a String
+pop :: (Eq a) => Stack a -> PassFail a String
 pop s
-	| s == Empty = Not "Empty stack!"
-	| True = Got t
-		where (Cons t s') = s
+	| s == Empty = Fail "Empty stack!"
+	| True = Pass t
+		where t = stackhead s
 
 popped :: (Eq a) => Stack a -> Stack a
 popped s
 	| s == Empty = s
 	| True = s'
-		where (Cons _ s') = s
+		where s' = stacktail s
 
-data Tree a = EmptyTree | Node a (Tree a) (Tree a)
-	deriving (Show, Eq, Read)
+stackconcat :: (Eq a) => Stack a -> Stack a -> Stack a
+stackconcat s t
+	| s == Empty = t
+	| True = Cons {stackhead = f, stacktail = stackconcat (popped s) t}
+		where Pass f = pop s
 
-singleton :: a -> Tree a
-singleton x = Node x EmptyTree EmptyTree
+data BST a = EmptyBST | Node {key :: a,  left :: (BST a) , right:: (BST a)}
+	deriving (Eq, Show, Read, Ord)
 
-treeInsert :: (Ord a) => a -> Tree a -> Tree a
-treeInsert x EmptyTree = singleton x
-treeInsert x (Node a left right)
-	| x == a = Node x left right
-	| x < a = Node a (treeInsert x left) right
-	| x > a = Node a left (treeInsert x right)
+bstleaf :: (Ord a) => a -> (BST a)
+bstleaf x = Node {key = x, left = EmptyBST, right = EmptyBST}
 
-treeElem :: (Eq a) => a -> Tree a -> Bool
-treeElem x EmptyTree = False
-treeElem x (Node y left right)
-	| x == y = True
-	| True = (treeElem x left) || (treeElem x right)
+bstinsert :: (Ord a) => a -> BST a -> BST a
+bstinsert x EmptyBST = bstleaf x
+bstinsert x Node {key = y, left = l, right = r}
+	| x<y = Node {key = y, left = (bstinsert x l), right = r}
+	| x>y = Node {key = y, left = l, right = (bstinsert x r) }
+	| x==y = Node {key = x, left = l, right = r}
+
+bstelem :: (Ord a) => a -> BST a -> Bool
+bstelem x t 
+	| x == key t = True
+	| True = bstelem x (left t) || bstelem x (right t)
+
+buildbstfromlist :: (Ord a) => [a] -> BST a
+buildbstfromlist l = foldr (\x t -> bstinsert x t) EmptyBST (rev l)
+
+
+
+
+
+
 
 data TrafficLight = Red | Yellow | Green
 
