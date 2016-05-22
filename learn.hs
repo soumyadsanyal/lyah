@@ -669,7 +669,8 @@ dot (Vector a b c) (Vector x y z) = a*x + b*y + c*z
 
 data OrderedBool = No | Yes deriving (Eq, Show, Read, Ord)
 
-data Safe a = None | Safe a deriving (Show, Eq, Read, Ord)
+data Safe a = None | Safe a 
+	deriving (Show, Read, Ord)
 
 data EReal a = MinusInfinity | EReal a | PlusInfinity deriving (Show, Read, Eq, Ord)
 
@@ -691,7 +692,7 @@ inPhoneBook :: Name -> PhoneNumber -> PhoneBook -> Bool
 inPhoneBook name pnumber pbook = elem (name, pnumber) pbook
 
 data PassFail a b = Pass a | Fail b
-	deriving (Eq, Show, Read, Ord)
+	deriving (Show, Read, Ord)
 
 data LockerState = Taken | Free deriving (Show, Eq)
 
@@ -754,27 +755,86 @@ bstelem x t
 buildbstfromlist :: (Ord a) => [a] -> BST a
 buildbstfromlist l = foldr (\x t -> bstinsert x t) EmptyBST (rev l)
 
-
-
-
-
-
-
-data TrafficLight = Red | Yellow | Green
+data TrafficLight  = Red | Yellow | Green
 
 instance Eq TrafficLight where
 	Red == Red = True
-	Green == Green = True
 	Yellow == Yellow = True
+	Green == Green = True
 	_ == _ = False
 
 instance Show TrafficLight where
-	show Red = "Red light"
-	show Yellow = "Yellow light"
-	show Green = "Green light"
+	show Red = "Red light, stop!"
+	show Yellow = "Yellow light, get ready to go or stop!"
+	show Green = "Green light, you can go!"
 
-class Yesno a where
+instance (Eq a, Eq b) => Eq (PassFail a b) where
+	Pass x == Pass y = x==y
+	Fail x == Fail y = x==y
+	_ == _ = False
+
+instance (Eq a) => Eq (Safe a) where
+	Safe x == Safe y = x==y
+	None == None = True
+	_ == _ = False
+
+class YesNo a where
 	yesno :: a -> Bool
+
+instance YesNo Int where
+	yesno 0 = False
+	yesno _ = True
+
+instance YesNo Float where
+	yesno 0 = False
+	yesno _ = True
+
+instance YesNo [a] where
+	yesno [] = False
+	yesno _ = True
+
+instance YesNo Bool where
+	yesno = id
+
+instance YesNo (Maybe a) where
+	yesno Nothing  = False
+	yesno (Just _) = True
+
+instance YesNo (BST a) where
+	yesno EmptyBST = False
+	yesno _ = True
+
+instance YesNo TrafficLight where
+	yesno Green = True
+	yesno _ = False
+
+yesnoif :: (YesNo y) => y -> a -> a -> a
+yesnoif c l r
+	| yesno c == True = l
+	| True = r
+
+class Functor' f where
+	fmap' :: (a -> b) -> f a -> f b
+
+instance Functor Stack where
+	fmap g Empty = Empty
+	fmap g s = Cons (g (stackhead s)) (fmap g (stacktail s))
+
+instance Functor Safe where
+	fmap g None = None
+	fmap g (Safe x) = Safe (g x)
+
+instance Functor BST where
+	fmap g EmptyBST = EmptyBST
+	fmap g t = Node (g (key t)) (fmap g (left t)) (fmap g (right t))
+
+
+
+
+
+	
+
+
 
 
 
