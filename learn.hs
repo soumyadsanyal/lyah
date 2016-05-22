@@ -618,21 +618,21 @@ myfindkey' k  = myfoldr (\(test, value) c -> (if k==(test) then (Just value) els
 
 l = [("1", "Soumya"), ("2", "Sarah"), ("3", "Bronzie"), ("4", "Scarlet"), ("5", "Sam")]
 
-data Shape = Circle Point Float | Rectangle Point Point deriving (Show)
+data Point = Point {x:: Float, y::Float} deriving (Show)
+data Shape = Circle {center :: Point, radius:: Float} | Rectangle {bottomleft :: Point, upperright :: Point}  deriving (Show)
 
-data Point = Point Float Float deriving (Show)
 
 -- A type is a collection of values. A value constructor is a function mapping parameters to values.
 --
 --
 --
 
-surface :: Shape -> Float
-surface (Circle _ r) = pi * r^2
-surface (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x1-x2) * (abs $ y2-y1)
+area :: Shape -> Float
+area (Circle (Point x y) r) = pi*r*r
+area (Rectangle (Point x1 y1) (Point x2 y2)) = (abs x2-x1) *(abs y2-y1)
 
 nudge :: Shape -> Point -> Shape
-nudge (Circle (Point x1 y1) r) (Point dx dy) = Circle (Point (x1+dx) (y1+dy)) r
+nudge (Circle (Point x y) r) (Point dx dy) = Circle (Point (x+dx) (y+dy)) r
 nudge (Rectangle (Point x1 y1) (Point x2 y2)) (Point dx dy) = Rectangle (Point (x1+dx) (y1+dy)) (Point (x2+dx) (y2+dy))
 
 baseCircle :: Float -> Shape
@@ -644,40 +644,42 @@ baseRect x y = Rectangle (Point 0 0) (Point x y)
 data Person = Person {
  firstname :: String,
  lastname :: String,
- age :: Int,
- height :: Float,
- phonenumber :: String,
- flavor :: String
- } deriving (Show)
+ age :: Int
+ } deriving (Show, Eq, Read)
 
-data Safe a = None | Safe a
-	deriving (Show)
+data Vector a = Vector a a a deriving (Show, Eq, Read)
 
-data Vector a = Vector a a a deriving (Show)
+vectoradd :: (Num a) => Vector a -> Vector a -> Vector a
+vectoradd (Vector x1 y1 z1) (Vector x2 y2 z2) = Vector (x1+x2) (y1+y2) (z1+z2)
+
+vectormult :: (Num a) => Vector a -> Vector a -> Vector a
+vectormult (Vector x1 y1 z1) (Vector x2 y2 z2) = Vector (x1*x2) (y1*y2) (z1*z2)
+
+scalarmult :: (Num a) => a -> Vector a -> Vector a
+scalarmult t v  = vectormult (Vector t t t) v
+
+dot :: (Num a) => Vector a -> Vector a -> a
+dot (Vector a b c) (Vector x y z) = a*x + b*y + c*z
+
+
 
 --A deriving B gives A the interface (functions) included in the typeclass B
 --
 --
 
-data ThisOrThat a b = This a | That b deriving (Eq, Ord, Read, Show)
+data OrderedBool = No | Yes deriving (Eq, Show, Read, Ord)
 
-data LockerState = Taken | Free deriving (Show, Eq)
+data Safe a = None | Safe a deriving (Show, Eq, Read, Ord)
 
-type Code = String
+data EReal a = MinusInfinity | EReal a | PlusInfinity deriving (Show, Read, Eq, Ord)
 
-type LockerMap = Map.Map Int (LockerState, Code)
-
-lockerlookup :: Int  -> LockerMap -> ThisOrThat String Code
-lockerlookup lockernumber map =
-	case Map.lookup lockernumber map of 
-		Nothing -> This $ "Locker number " ++ show lockernumber ++ " doesn't exist."
-		Just (state, code) -> if state /= Taken
-			then That code
-			else This $ "Locker " ++ show lockernumber ++ " is already taken."
+data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday 
+	deriving (Show, Read, Eq, Ord, Bounded, Enum)
 
 
-lockers :: LockerMap
-lockers = Map.fromList [(100,(Taken, "123")), (101, (Free, "345"))]
+
+
+
 
 data Stack a = Empty | Cons a (Stack a)
 	deriving (Show, Eq, Read, Ord)
@@ -729,8 +731,13 @@ instance Show TrafficLight where
 	show Yellow = "Yellow light"
 	show Green = "Green light"
 
-class Functor f where
-	fmap :: (a->b) -> f a -> f b
+class Yesno a where
+	yesno :: a -> Bool
+
+
+
+
+
 
 
 
