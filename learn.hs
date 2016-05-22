@@ -836,6 +836,40 @@ instance Functor (PassFail a) where
 --	fmap g (Map.Map k) v = Map.Map k (g v)
 -- todo: implement this correctly.
 
+class Tofu t where
+	tofu :: j a -> t a j
+
+-- t a j is kind *
+-- j is kind * -> *
+-- a is kind *
+-- t is kind * -> (* -> *) -> *
+
+data Frank a b = Frank {frankField :: b a}
+	deriving (Show)
+
+-- frankField is kind *
+-- b a is kind *
+-- so b is kind (kind a -> *)
+-- assuming kind a is *, then kind b is * -> *
+-- Frank is kind * -> (* -> *) -> *
+
+instance Tofu Frank where
+	tofu x = Frank x
+
+data Barry t k p = Barry { yabba :: p, dabba :: t k}
+	deriving (Show)
+
+-- kind p is *
+-- kind t k is *
+-- assume kind t is * -> *
+-- then kind k is *
+-- kind t k p is (* -> *) -> * -> * -> *
+
+
+
+
+
+
 
 	
 
