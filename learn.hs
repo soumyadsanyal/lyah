@@ -869,28 +869,3 @@ instance Functor (Barry a b) where
 	fmap g x = Barry {yabba = g (yabba x), dabba = dabba x}
 
 
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
