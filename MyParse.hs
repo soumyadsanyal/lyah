@@ -10,17 +10,35 @@ type Parser a = String -> [(a, String)]
 returnParse :: a -> Parser a
 returnParse = \value -> \input -> [(value, input)]
 
+rereturnParse :: Char -> String -> [(Char, String)]
+rereturnParse = \c ->
+	\inp ->
+		[(c, inp)]
+
 failParse :: Parser a
 failParse = \input -> []
+
+refailParse :: String -> [(Char, String)] 
+refailParse = \inp -> []
 
 biteParse :: Parser Char
 biteParse = \input -> case input of
 	[] -> []
 	(x:xs) -> [(x,xs)]
 
+rebiteParse :: String -> [(Char, String)] 
+rebiteParse = \inp ->
+	case inp of
+		[] -> []
+		(x:xs) -> [(x, xs)]
+
 parseEval :: Parser a -> String -> [(a, String)]
 parseEval p input = p input 
 
+reparseEval :: (String -> [(Char, String)]) -> String -> [(Char, String)]
+reparseEval = \p ->
+	\s ->
+		p s
 
 -- want to sequence parsers
 --
