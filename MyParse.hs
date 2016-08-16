@@ -70,9 +70,14 @@ addFirstTwo = bind biteParse (\x ->
 -- Fail = [] 
 -- what does this have to do with binding? need to branch on the result of the parse step - if prohibited, then fail, else recurse
 
-soumya :: Char -> String -> [(Char, String)]
-soumya = \c -> \inp -> (case parseEval biteParse inp of 
+noCharIn :: Char -> String -> [(Char, String)]
+noCharIn = \c -> \inp -> (case parseEval biteParse inp of 
 	[] -> [('1', "")]
-	[(x, rest)] -> if x==c then [] else soumya c rest)
+	[(x, rest)] -> if x==c then [] else noCharIn c rest)
+
+noCharsIn :: [Char] -> String -> [(Char, String)]
+noCharsIn = \s -> \inp -> (case parseEval biteParse inp of 
+	[] -> [('1', "")]
+	[(x, rest)] -> if elem x s then [] else noCharsIn s rest)
 
 
