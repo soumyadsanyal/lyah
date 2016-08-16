@@ -109,5 +109,17 @@ try p q = \inp -> case parseEval p inp of
 	[] -> parseEval q inp
 	return -> return
 
+predParse :: (Char -> Bool) -> Parser Char
+predParse p = bind biteParse (\x ->
+	if p x then returnParse x else failParse)
+
+repred :: (Char -> Bool) -> String -> [(Char, String)]
+repred = \p ->
+	\inp ->
+		case biteParse inp of 
+			[] -> []
+			[(x,xs)] -> if p x then [(x,xs)] else []
+
+
 
 
