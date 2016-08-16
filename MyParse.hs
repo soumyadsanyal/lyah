@@ -1,4 +1,5 @@
 module MyParser where
+import Data.Char (digitToInt)
 
 type Parser a = String -> [(a, String)]
 
@@ -29,6 +30,9 @@ bind p f = \input -> case parseEval p input of
 	[] -> []
 	[(result, residue)] -> parseEval (f result) residue 
 
+-- this basically has the overall structure of: bind p f = \inp -> case p inp of 
+--	Fail -> Fail
+--	[this, that] -> (f this) that
 
 --where (a -> Parser b) is a function selecting a parser for each result of type a
 --
@@ -43,5 +47,32 @@ s :: Char -> Parser Char
 s initial = bind (biteParse) (\x1 ->
 	if x1==initial then failParse else (returnParse initial))
 
+failsWheneverProhibitedChar :: Char -> Parser Char
+failsWheneverProhibitedChar c = bind biteParse (\result ->
+	if result==c then (returnParse 'x') else (failsWheneverProhibitedChar c))
+
+addFirstTwo :: Parser Int
+addFirstTwo = bind biteParse (\x ->
+  bind biteParse (\y ->
+		returnParse ( (digitToInt x) + (digitToInt y)  )
+		))
+
+
+--addAll = process p f = \inp -> case p inp of
+--	Fail -> Fail
+--	[this, that] -> (f this) that
+
+--need that (f this) = if this is safe then p else Fail
+--that is that
+--p "" = Success
+--p xxx = Fail
+-- Success = [('1', "")]
+-- Fail = [] 
+-- what does this have to do with binding? need to branch on the result of the parse step - if prohibited, then fail, else recurse
+
+soumya :: Char -> String -> [(Char, String)]
+soumya = \c -> \inp -> (case parseEval biteParse inp of 
+	[] -> [('1', "")]
+	[(x, rest)] -> if x==c then [] else soumya c rest)
 
 
