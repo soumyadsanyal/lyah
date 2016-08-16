@@ -1,5 +1,5 @@
 module MyParser where
-import Data.Char (digitToInt)
+import Data.Char 
 
 type Parser a = String -> [(a, String)]
 
@@ -137,6 +137,30 @@ repred = \p ->
 		case biteParse inp of 
 			[] -> []
 			[(x,xs)] -> if p x then [(x,xs)] else []
+
+digit :: String -> [(Char, String)]
+digit = predParse isDigit
+
+lower :: String -> [(Char, String)]
+lower = predParse isLower
+
+upper :: String -> [(Char, String)]
+upper = predParse isUpper
+
+letter :: String -> [(Char, String)]
+letter = predParse isAlpha
+
+alphanum :: String -> [(Char, String)]
+alphanum = predParse isAlphaNum
+
+char :: Char -> String -> [(Char, String)]
+char = \c -> predParse ( == c)
+
+-- Can I encode failure/success using a datatype?
+-- should try
+
+
+
 
 
 
