@@ -104,3 +104,10 @@ data Try a = Fail | Succeed a
 --
 --This needs to be finished ...
 
+try :: Parser a -> Parser a -> Parser a
+try p q = \inp -> case parseEval p inp of
+	[] -> parseEval q inp
+	return -> return
+
+
+
