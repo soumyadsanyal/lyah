@@ -80,4 +80,14 @@ noCharsIn = \s -> \inp -> (case parseEval biteParse inp of
 	[] -> [('1', "")]
 	[(x, rest)] -> if elem x s then [] else noCharsIn s rest)
 
+-- example collecting three results and returning the value of a function applied to them
+--
+
+soumya :: ([Int] -> Int) -> Parser Int
+soumya = \f -> bind biteParse (\x ->
+	bind biteParse (\y ->
+		bind biteParse (\z ->
+			returnParse (f $ map Data.Char.digitToInt [x,y,z]) ) ) )
+
+
 
