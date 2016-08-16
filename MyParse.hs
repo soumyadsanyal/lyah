@@ -89,5 +89,18 @@ soumya = \f -> bind biteParse (\x ->
 		bind biteParse (\z ->
 			returnParse (f $ map Data.Char.digitToInt [x,y,z]) ) ) )
 
+data Try a = Fail | Succeed a
+	deriving (Show, Eq, Read, Ord)
 
+--soumya :: (a -> b) -> ([a] -> Try [a]) -> Try a
+--soumya = \f ->
+--	\g ->
+--		\inp ->
+--			case g inp of
+--				Fail -> Fail
+--				Succeed (x:xs) -> soumya (f x) (g xs)
+
+--g = 
+--
+--This needs to be finished ...
 
