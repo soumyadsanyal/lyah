@@ -4,7 +4,7 @@ import Data.Char
 data Try a = Fail | Succeed a
 	deriving (Show, Eq, Read, Ord)
 
-type Parser a = String -> [(a, String)]
+type Parser a = [a] -> [(a, [a])]
 
 -- need three kinds of parsers: (1) that returns whatever its argument is and doesn't touch the string to be parsed, (2) that fails on any input and returns no result, (3) that bites off the first character and returns the character with the tail 
 --
