@@ -65,8 +65,20 @@ safeAlphanum = safePredParse isAlphaNum
 safeChar :: Char -> String -> Try (Char, String)
 safeChar = \c -> safePredParse ( == c)
 
+-- let's try to write our own do blocks
 
+safeDoHelper :: [([a] -> Try (a, [a]))] -> [a] -> ([a] -> b) -> ([a] -> b)
+safeDoHelper plist store reducer = \inp -> 
+	case (plist, store) of
+		([], store) -> reducer $ reverse store
+		((p:plist'), store) -> safeDoHelper plist' store' reducer residue
+			where (store', residue) = case safeParseEval p inp of
+				Fail -> (store, inp)
+				Succeed (result, residue) -> ((result:store), residue)
 
+	
+safeDo :: [([a] -> Try (a, [a]))] -> ([a] -> b) -> ([a] -> b) 
+safeDo plist reducer = safeDoHelper plist [] reducer
 
-
+-- next we should refactor this by using the parser type to clean the code up
 
