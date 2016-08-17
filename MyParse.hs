@@ -1,6 +1,9 @@
 module MyParser where
 import Data.Char 
 
+data Try a = Fail | Succeed a
+	deriving (Show, Eq, Read, Ord)
+
 type Parser a = String -> [(a, String)]
 
 -- need three kinds of parsers: (1) that returns whatever its argument is and doesn't touch the string to be parsed, (2) that fails on any input and returns no result, (3) that bites off the first character and returns the character with the tail 
@@ -107,9 +110,6 @@ soumya = \f -> bind biteParse (\x ->
 		bind biteParse (\z ->
 			returnParse (f $ map Data.Char.digitToInt [x,y,z]) ) ) )
 
-data Try a = Fail | Succeed a
-	deriving (Show, Eq, Read, Ord)
-
 --soumya :: (a -> b) -> ([a] -> Try [a]) -> Try a
 --soumya = \f ->
 --	\g ->
@@ -158,8 +158,6 @@ char = \c -> predParse ( == c)
 
 -- Can I encode failure/success using a datatype?
 -- should try
-
-
 
 
 
