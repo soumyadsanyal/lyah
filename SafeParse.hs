@@ -65,8 +65,6 @@ safeAlphanum = safePredParse isAlphaNum
 safeChar :: Char -> String -> Try (Char, String)
 safeChar = \c -> safePredParse ( == c)
 
--- Can I encode failure/success using a datatype?
--- should try
 
 
 
