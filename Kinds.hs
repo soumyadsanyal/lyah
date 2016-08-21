@@ -28,7 +28,6 @@ data First a = First a
 --kind First is * -> *
 --
 data Second a b c = Second (a b c)
-    deriving (Show)
 
 --kind Second is (* -> * -> *) -> * -> * -> *
 --
@@ -44,7 +43,7 @@ data Solution a b = Solution (b a)
 --
 
 data OtherSolution a b c = OtherSolution a (c b) 
-    deriving (Show)
+    deriving (Show, Read)
 
 class Tofu t where
     tofuLift :: a b -> t b a
@@ -52,6 +51,6 @@ class Tofu t where
 instance Tofu Solution where
     tofuLift = Solution 
 
-
-
+instance Tofu (OtherSolution a) where
+    tofuLift = OtherSolution a
 

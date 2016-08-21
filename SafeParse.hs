@@ -70,7 +70,7 @@ safeChar = \c -> safePredParse ( == c)
 
 -- let's try to write our own do blocks
 
-safeDoHelper :: [(Parser a)] -> ParseValues a -> ((ParseValues a) -> b) -> ((ParseValues a) -> b)
+safeDoHelper :: [(Parser a)] -> [a] -> ([a] -> b) -> (Parser b)
 safeDoHelper plist store reducer = \inp -> 
 	case (plist, store) of
 		([], store) -> reducer $ reverse store
@@ -82,5 +82,14 @@ safeDoHelper plist store reducer = \inp ->
 	
 safeDo :: [(Parser a)] -> ((ParseValues a) -> b) -> ((ParseValues a) -> b) 
 safeDo plist reducer = safeDoHelper plist [] reducer
+
+--this :: String -> Parser String
+--this = \arg -> case arg of
+--    [] -> safeReturnParse []
+--    (x:xs) -> safeBind (safeChar x) (\z1 -> 
+--        safeBind (string xs) (\z2 -> 
+--            safeReturnParse (x:xs)))
+
+
 
 
