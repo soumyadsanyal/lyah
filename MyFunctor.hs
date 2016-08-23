@@ -42,9 +42,7 @@ instance MyFunctor (Stopping a) where
 -- E.g. Maybe a is a *function* \a -> Nothing | Just a, taking a type bound to the type parameter a and returning a type Maybe a, which is a set consisting of values Nothing or \{Just x | x in a\}. 
 -- what is the type of an expression such as Maybe? We refer to functions from types to types as having kinds. In this case, the kind of Maybe is (* -> *).
 -- (->) is a function that takes two types and returns a type. It takes the form \a -> \b -> (a -> b). 
--- in this case, the expression ((->) a) is a function \b -> (a -> b). In particular, the type variable a is _bound_ in the expression ((->) a). 
--- This means that the expression ((->) a) is a type constructor taking _one_ type to another. 
--- what are its associated value constructors? 
+-- in this case, the expression ((->) a) is a function \b -> (a -> b). 
 
 instance MyFunctor ((->) a) where
     lift f g = f.g
